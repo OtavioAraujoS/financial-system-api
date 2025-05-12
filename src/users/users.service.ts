@@ -21,14 +21,23 @@ export class UserService {
 
     /**
      * Retrieves a user by ID.
-     * @param {string} id - The ID of the user.
+     * @param {number} id - The ID of the user.
      * @returns {Promise<User>} A promise that resolves to the user data.
      * @throws {NotFoundException} If the user is not found.
      */
-    async getUserById(id: number) {
-        return this.userRepository.findOne({
+    async getUserById(id: number, userWhoRequest?: number) {
+        const user = await this.userRepository.findOne({
             where: { id },
         });
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+        if (userWhoRequest !== user.id) {
+            throw new Error('Unauthorized');
+        }
+
+        return user;
     }
     /**
      * Creates a new user.
