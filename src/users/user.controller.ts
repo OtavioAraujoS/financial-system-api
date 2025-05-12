@@ -42,13 +42,13 @@ export class UserController {
     @Get(':id')
     async getUserById(
         @Param('id') id: number,
-        @Body('userWhoRequest') userWhoRequest: string,
+        @Body('userWhoRequest') userWhoRequest: number,
     ): Promise<User> {
         if (!userWhoRequest) {
             throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
         }
-        const user = await this.userService.getUserById(id);
-        if (!user) {
+        const user = await this.userService.getUserById(id, userWhoRequest);
+        if (!user || typeof user.id !== 'number') {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
         return user;
@@ -96,7 +96,7 @@ export class UserController {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
         const user = await this.userService.getUserById(id);
-        if (!user) {
+        if (!user || typeof user.id !== 'number') {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
         return user;
