@@ -40,14 +40,11 @@ export class UserController {
     @ApiOperation({ summary: 'Get user infos' })
     @ApiResponse({ status: 200, description: 'Return a user.', type: [User] })
     @Get(':id')
-    async getUserById(
-        @Param('id') id: number,
-        @Body('userWhoRequest') userWhoRequest: number,
-    ): Promise<User> {
-        if (!userWhoRequest) {
-            throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    async getUserById(@Param('id') id: number): Promise<User> {
+        if (isNaN(id)) {
+            throw new HttpException('Invalid ID', HttpStatus.BAD_REQUEST);
         }
-        const user = await this.userService.getUserById(id, userWhoRequest);
+        const user = await this.userService.getUserById(id);
         if (!user || typeof user.id !== 'number') {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
@@ -124,7 +121,7 @@ export class UserController {
     @ApiOperation({ summary: 'Delete a user' })
     @ApiResponse({ status: 200, description: 'User deleted successfully.' })
     @ApiResponse({ status: 404, description: 'User not found.' })
-    @Delete('delete/:id')
+    @Delete(':id')
     async deleteUser(@Param('id') id: number) {
         try {
             return await this.userService.deleteUser(id);
