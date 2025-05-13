@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserModule } from './users/user.module';
+import { User } from './users/entity/user.entity';
 
 enum DB_TYPE {
     POSTGRES = 'postgres',
@@ -22,6 +24,8 @@ enum DB_TYPE {
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: true,
         }),
+        TypeOrmModule.forFeature([User]),
+        UserModule,
     ],
     controllers: [AppController],
     providers: [AppService],
