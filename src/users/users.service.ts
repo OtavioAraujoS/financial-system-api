@@ -25,16 +25,13 @@ export class UserService {
      * @returns {Promise<User>} A promise that resolves to the user data.
      * @throws {NotFoundException} If the user is not found.
      */
-    async getUserById(id: number, userWhoRequest?: number) {
+    async getUserById(id: number) {
         const user = await this.userRepository.findOne({
             where: { id },
         });
 
         if (!user) {
             throw new Error('User not found');
-        }
-        if (userWhoRequest !== user.id) {
-            throw new Error('Unauthorized');
         }
 
         return user;
